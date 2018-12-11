@@ -45,7 +45,6 @@ public class ImageAdapter extends BaseAdapter {
         Picasso.with(mContext)
                 .load("http://image.tmdb.org/t/p/w500/"+image)
                 .into(im);
-//        im.setImageResource(R.drawable.ic_launcher_background);
         return convertView;
     }
 }

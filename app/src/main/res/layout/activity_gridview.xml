@@ -10,5 +10,6 @@
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_launcher_background" />
+        android:src="@drawable/ic_launcher_background"
+        android:contentDescription="TODO" />
 </LinearLayout>

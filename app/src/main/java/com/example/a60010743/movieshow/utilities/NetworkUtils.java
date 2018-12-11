@@ -39,10 +39,10 @@ public class NetworkUtils {
         } catch (MalformedURLException e){
             e.printStackTrace();
         }
-        Log.d("URLLLLLL", url.toString());
         return url;
     }
 
+    // Fetch data from movie db api
     public static String fetchData(URL query) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) query.openConnection();
         try {

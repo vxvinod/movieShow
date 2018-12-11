@@ -14,8 +14,8 @@ import java.util.List;
 public class JsonUtils {
     public static List<MovieDetails> parse_json_get_details(String response)
                             throws JSONException{
-
-        final String RESULT = "RESULT";
+        // Initialize variables
+        final String RESULT = "results";
         final String TITLE = "title";
         final String RELEASE_DATE = "release_date";
         final String POSTER_PATH = "poster_path";
@@ -29,26 +29,21 @@ public class JsonUtils {
         float rating;
         String release_date;
 
+        // Parse JSON Object
         JSONObject movieData = new JSONObject(response);
-        JSONArray results = movieData.getJSONArray("results");
-        for(int i=0; i < results.length(); i++){
-            JSONObject data = results.getJSONObject(i);
-            title = data.optString(TITLE);
-            image = data.optString(POSTER_PATH);
-            synopsis = data.optString(OVERVIEW);
-            rating = Float.valueOf(data.optString(VOTE_AVERAGE));
-            release_date = data.optString(RELEASE_DATE);
-            Log.d("PUTSS"+i, title);
-            movieDetCollection.add(new MovieDetails(title, image, synopsis, rating, release_date));
+        if(movieData != null) {
+            JSONArray results = movieData.getJSONArray(RESULT);
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject data = results.getJSONObject(i);
+                title = data.optString(TITLE);
+                image = data.optString(POSTER_PATH);
+                synopsis = data.optString(OVERVIEW);
+                rating = Float.valueOf(data.optString(VOTE_AVERAGE));
+                release_date = data.optString(RELEASE_DATE);
+                Log.d("PUTSS" + i, title);
+                movieDetCollection.add(new MovieDetails(title, image, synopsis, rating, release_date));
+            }
         }
-
-        for(int j=0; j<movieDetCollection.size(); j++){
-            Log.d("movieCollection"+j+"title", movieDetCollection.get(j).getTitle());
-            Log.d("movieCollection"+j+"image", movieDetCollection.get(j).getPosterTv());
-            Log.d("movieCollection"+j+"rating", String.valueOf(movieDetCollection.get(j).getUserRating()) );
-        }
-        Log.d("movieCollection", movieDetCollection.toString());
-        //movieDetCollection.add(new MovieDetails())
         return movieDetCollection;
     }
 }

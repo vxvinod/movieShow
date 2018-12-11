@@ -29,17 +29,20 @@ public class MainActivity extends AppCompatActivity {
     private List<MovieDetails> mMovieDetails;
     private String mQueryResults;
     private ProgressBar mSpinner;
+    private static final String POPULAR = "popular";
+    private static final String TOP_RATED = "top_rated";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Get element in to an object
         mSpinner = (ProgressBar) findViewById(R.id.progressBar);
         mGridView = (GridView) findViewById(R.id.movie_grid);
-        URL movieDbUrl = NetworkUtils.buildUrl("popular");
+
+        // By default popular movie details is listed
+        URL movieDbUrl = NetworkUtils.buildUrl(POPULAR);
         new MovieDbQueryTask().execute(movieDbUrl);
-
-
-
     }
 
     @Override
@@ -50,11 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String searchParam = (item.getItemId() == R.id.popular) ? "popular" : "top_rated";
-        Log.d("ITEMIDIDIDID", String.valueOf(item.getItemId()));
+        String searchParam = (item.getItemId() == R.id.popular) ? POPULAR : TOP_RATED;
+
+        // Display top rated or popular content based on selection
         URL movieDbUrl = NetworkUtils.buildUrl(searchParam);
         new MovieDbQueryTask().execute(movieDbUrl);
-       // return super.onOptionsItemSelected(item);
+
         return true;
     }
 
@@ -62,47 +66,44 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+
+            // Handle progress spinning bar
             mSpinner.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected String doInBackground(URL... urls) {
-          //  mGridView.setVisibility(View.GONE);
-
             URL queryUrl = urls[0];
-//            String movieQueryResults = null;
             try{
+                // Fetch data from movie db api
                 mQueryResults = NetworkUtils.fetchData(queryUrl);
             }catch (Exception e){
                 e.printStackTrace();
             }
-           // Log.d("QUERY_RESULTS", movieQueryResults);
             return mQueryResults;
         }
 
         @Override
         protected void onPostExecute(String s) {
             mSpinner.setVisibility(View.GONE);
-           // mGridView.setVisibility(View.VISIBLE);
-          //  Log.d("DISPLAY POPULAR DATA", s);
-            try {
-                mMovieDetails = JsonUtils.parse_json_get_details(s);
+            if(s!= null) {
+                try {
+                    // Parse Json response
+                    mMovieDetails = JsonUtils.parse_json_get_details(s);
+                    mGridView.setAdapter(new ImageAdapter(MainActivity.this, mMovieDetails));
+                    mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-
-                mGridView.setAdapter(new ImageAdapter(MainActivity.this, mMovieDetails));
-
-                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // Traversing to detailed activity
                         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                         intent.putExtra("movieDetail", mMovieDetails.get(position));
-                        Log.d("CLCISD","asdasd");
                         startActivity(intent);
-                    }
-                });
-            }catch(Exception e){
-                e.printStackTrace();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
