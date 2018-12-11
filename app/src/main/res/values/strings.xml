@@ -6,4 +6,9 @@
     <string name="title_name">Title</string>
     <string name="image_cont_desc">PosterImage</string>
     <string name="out_of_ten">/10</string>
+    <string name="user_rating">User Rating</string>
+    <string name="release_date">Release Date</string>
+    <string name="synopsis">TextView</string>
+    <string name="text_display">TextView</string>
+    <string name="image_content_desc">TODO</string>
 </resources>
