@@ -22,7 +22,7 @@ public class NetworkUtils {
     final static String POPULAR = "popular";
     final static String TOP_RATED = "3/movie/top_rated";
     final static String API_KEY_TXT = "api_key";
-    final static String API_KEY = "1f6edcf7cdec1a1942d5d87e84a1ab89";
+    final static String API_KEY = "";
 
     // Build URL
     public static URL buildUrl(String movieDbSearchQuery){
