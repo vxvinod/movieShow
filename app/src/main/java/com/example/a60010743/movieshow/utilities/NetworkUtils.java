@@ -29,7 +29,7 @@ public class NetworkUtils {
         Uri buildUri = Uri.parse(MOVIE_DB_URL).buildUpon()
                         .appendEncodedPath(PAGE)
                         .appendEncodedPath(MOVIE)
-                        .appendEncodedPath(POPULAR)
+                        .appendEncodedPath(movieDbSearchQuery)
                         .appendQueryParameter(API_KEY_TXT, API_KEY)
                         .build();
 

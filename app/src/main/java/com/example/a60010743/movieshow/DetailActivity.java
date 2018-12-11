@@ -33,7 +33,7 @@ public class DetailActivity extends AppCompatActivity {
 
         mTitle.setText(md.getTitle());
         Picasso.with(DetailActivity.this)
-                .load("http://image.tmdb.org/t/p/w500/"+md.getPosterTv())
+                .load("http://image.tmdb.org/t/p/w342/"+md.getPosterTv())
                 .into(mPosterView);
         mSynopsis.setText(md.getOverview());
         mUserRating.setText(String.valueOf(md.getUserRating())+"/10");

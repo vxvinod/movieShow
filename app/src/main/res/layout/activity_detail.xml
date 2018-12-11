@@ -26,8 +26,8 @@
 
     <ImageView
         android:id="@+id/image_view"
-        android:layout_width="111dp"
-        android:layout_height="173dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="30dp"
@@ -39,9 +39,8 @@
         android:id="@+id/rating_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/rating_text"
-        android:layout_marginEnd="95dp"
+        android:layout_toEndOf="@+id/rating_text"
         android:text="TextView"
         android:textSize="12dp"
         android:textStyle="italic" />
@@ -52,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="117dp"
+        android:layout_marginTop="172dp"
         android:text="User Rating"
         android:textSize="12dp"
         android:textStyle="bold" />
@@ -63,8 +62,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="162dp"
-        android:text="TextView"
+        android:layout_marginTop="215dp"
+        android:text="Release Date"
         android:textSize="12dp"
         android:textStyle="bold" />
 
@@ -84,7 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="155dp"
+        android:layout_marginBottom="193dp"
         android:text="TextView"
         android:textSize="14sp" />
 </RelativeLayout>
