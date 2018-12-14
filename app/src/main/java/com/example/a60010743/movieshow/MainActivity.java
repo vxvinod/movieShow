@@ -1,5 +1,6 @@
 package com.example.a60010743.movieshow;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -18,31 +19,32 @@ import com.example.a60010743.movieshow.model.MovieDetails;
 import com.example.a60010743.movieshow.utilities.JsonUtils;
 import com.example.a60010743.movieshow.utilities.NetworkUtils;
 
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    private GridView mGridView;
-    private List<MovieDetails> mMovieDetails;
-    private String mQueryResults;
-    private ProgressBar mSpinner;
-    private static final String POPULAR = "popular";
-    private static final String TOP_RATED = "top_rated";
+//
+//    private GridView mGridView;
+//    private List<MovieDetails> mMovieDetails;
+//    private String mQueryResults;
+//    private ProgressBar mSpinner;
+    private final String POPULAR = "popular";
+    private final String TOP_RATED = "top_rated";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Get element in to an object
-        mSpinner = (ProgressBar) findViewById(R.id.progressBar);
-        mGridView = (GridView) findViewById(R.id.movie_grid);
+//        mSpinner = (ProgressBar) findViewById(R.id.progressBar);
+//        mGridView = (GridView) findViewById(R.id.movie_grid);
 
         // By default popular movie details is listed
         URL movieDbUrl = NetworkUtils.buildUrl(POPULAR);
-        new MovieDbQueryTask().execute(movieDbUrl);
+        new MovieDbQueryTask(this).execute(movieDbUrl);
     }
 
     @Override
@@ -57,16 +59,30 @@ public class MainActivity extends AppCompatActivity {
 
         // Display top rated or popular content based on selection
         URL movieDbUrl = NetworkUtils.buildUrl(searchParam);
-        new MovieDbQueryTask().execute(movieDbUrl);
+        new MovieDbQueryTask(this).execute(movieDbUrl);
 
         return true;
     }
 
-    public class MovieDbQueryTask extends AsyncTask<URL, Void, String>{
+    public static class MovieDbQueryTask extends AsyncTask<URL, Void, String>{
+
+        private WeakReference<MainActivity> activityReference;
+        private MainActivity activity;
+        private List<MovieDetails> mMovieDetails;
+        private String mQueryResults;
+        private ProgressBar mSpinner;
+        private GridView mGridView;
+        MovieDbQueryTask(MainActivity context){
+            activityReference = new WeakReference<>(context);
+            activity = activityReference.get();
+        //    MainActivity mainActivity = activityReference.get();
+        }
 
         @Override
         protected void onPreExecute() {
-
+            if(activity == null || activity.isFinishing()) return;
+            mSpinner = activity.findViewById(R.id.progressBar);
+            mGridView = activity.findViewById(R.id.movie_grid);
             // Handle progress spinning bar
             mSpinner.setVisibility(View.VISIBLE);
         }
@@ -90,15 +106,15 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     // Parse Json response
                     mMovieDetails = JsonUtils.parse_json_get_details(s);
-                    mGridView.setAdapter(new ImageAdapter(MainActivity.this, mMovieDetails));
+                    mGridView.setAdapter(new ImageAdapter(activity, mMovieDetails));
                     mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         // Traversing to detailed activity
-                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                        Intent intent = new Intent(activity, DetailActivity.class);
                         intent.putExtra("movieDetail", mMovieDetails.get(position));
-                        startActivity(intent);
+                        activity.startActivity(intent);
                         }
                     });
                 } catch (Exception e) {

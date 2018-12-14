@@ -11,7 +11,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonUtils {
+public final class JsonUtils {
+    private JsonUtils(){}
     public static List<MovieDetails> parse_json_get_details(String response)
                             throws JSONException{
         // Initialize variables

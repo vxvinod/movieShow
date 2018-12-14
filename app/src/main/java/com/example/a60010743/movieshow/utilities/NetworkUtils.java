@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import com.example.a60010743.movieshow.BuildConfig;
 import com.example.a60010743.movieshow.model.MovieDetails;
 
 import java.io.IOException;
@@ -13,16 +14,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class NetworkUtils {
+public final class NetworkUtils {
 
+    private NetworkUtils(){}
     // Initialize variables
     final static String MOVIE_DB_URL = "https://api.themoviedb.org";
     final static String PAGE = "3";
     final static String MOVIE = "movie";
-    final static String POPULAR = "popular";
-    final static String TOP_RATED = "3/movie/top_rated";
     final static String API_KEY_TXT = "api_key";
-    final static String API_KEY = "";
+    final static String API_KEY = BuildConfig.API_KEY;
 
     // Build URL
     public static URL buildUrl(String movieDbSearchQuery){
