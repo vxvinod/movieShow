@@ -39,6 +39,7 @@ public final class NetworkUtils {
         } catch (MalformedURLException e){
             e.printStackTrace();
         }
+        Log.d("URL OF MOVIE LIST", url.toString());
         return url;
     }
 
@@ -61,6 +62,43 @@ public final class NetworkUtils {
             urlConnection.disconnect();
         }
 
+    }
+
+    //Build trailer URL
+    public static URL buildTrailerUrl(String movieId){
+        Uri buildUri = Uri.parse(MOVIE_DB_URL).buildUpon()
+                            .appendEncodedPath(PAGE)
+                            .appendEncodedPath(MOVIE)
+                            .appendEncodedPath(movieId)
+                            .appendEncodedPath("videos")
+                            .appendQueryParameter(API_KEY_TXT, API_KEY)
+                            .build();
+
+        URL url = null;
+        try{
+            url = new URL(buildUri.toString());
+        } catch (MalformedURLException e){
+            e.printStackTrace();
+        }
+        return url;
+    }
+
+    // Build Review URL
+    public static URL buildReviewUrl(String movieId){
+        Uri buildUri = Uri.parse(MOVIE_DB_URL).buildUpon()
+                            .appendEncodedPath(PAGE)
+                            .appendEncodedPath(MOVIE)
+                            .appendEncodedPath(movieId)
+                            .appendEncodedPath("reviews")
+                            .appendQueryParameter(API_KEY_TXT, API_KEY)
+                            .build();
+        URL url = null;
+        try{
+            url = new URL(buildUri.toString());
+        } catch (MalformedURLException e){
+            e.printStackTrace();
+        }
+        return url;
     }
 
 

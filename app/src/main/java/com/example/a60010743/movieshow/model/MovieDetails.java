@@ -9,6 +9,7 @@ public class MovieDetails implements Parcelable {
     private String overview;
     private float userRating;
     private String releasedDate;
+    private String movieId;
 
     public String getTitle() {
         return title;
@@ -50,14 +51,18 @@ public class MovieDetails implements Parcelable {
         this.releasedDate = releasedDate;
     }
 
+    public String getMovieId(){ return movieId; }
+
+    public void setMovieId(String movieId) { this.movieId = movieId; }
 
 
-    public MovieDetails(String title, String posterTv, String overview, float userRating, String released_date) {
+    public MovieDetails(String title, String posterTv, String overview, float userRating, String released_date, String movieId) {
         this.title = title;
         this.posterTv = posterTv;
         this.overview = overview;
         this.userRating = userRating;
         this.releasedDate = released_date;
+        this.movieId = movieId;
     }
 
     private MovieDetails(Parcel parcel){
@@ -66,6 +71,7 @@ public class MovieDetails implements Parcelable {
         overview = parcel.readString();
         userRating = parcel.readFloat();
         releasedDate = parcel.readString();
+        movieId = parcel.readString();
     }
 
     @Override
@@ -80,6 +86,7 @@ public class MovieDetails implements Parcelable {
         dest.writeString(overview);
         dest.writeFloat(userRating);
         dest.writeString(releasedDate);
+        dest.writeString(movieId);
    }
 
 
