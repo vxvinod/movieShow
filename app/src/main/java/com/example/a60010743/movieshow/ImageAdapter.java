@@ -1,5 +1,6 @@
 package com.example.a60010743.movieshow;
 
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,8 @@ public class ImageAdapter extends BaseAdapter {
         this.movieDetails = movieDetails;
     }
 
+
+
     @Override
     public Object getItem(int position) {
         return null;
@@ -35,7 +38,8 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return movieDetails.size();
+
+        return (movieDetails ==null) ? 0: movieDetails.size();
     }
 
     public void setMovieDetails(List<MovieDetails> md){

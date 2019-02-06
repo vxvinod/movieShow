@@ -22,4 +22,7 @@ public interface MovieDao {
 
     @Delete
     void deleteTask(MovieDetails favMov);
+
+    @Query("SELECT * from MovieDetails WHERE movieId is :id")
+    MovieDetails findById(String id);
 }

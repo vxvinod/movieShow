@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity{
 //    private GridView mGridView;
 //    private List<MovieDetails> mMovieDetails;
 //    private String mQueryResults;
-//    private ProgressBar mSpinner;
+    private ProgressBar mSpinner;
     private final String LOG_TAG = getClass().getSimpleName().toString();
     private final String POPULAR = "popular";
     private final String TOP_RATED = "top_rated";
@@ -48,13 +48,14 @@ public class MainActivity extends AppCompatActivity{
     private static ImageAdapter iAdapter;
     public static final int FETCH_MOVIE_DATA = 22;
     public static URL MOVIE_URL = null;
+    private MainJsonViewModel jsonViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Get element in to an object
-//        mSpinner = (ProgressBar) findViewById(R.id.progressBar);
+        mSpinner = (ProgressBar) findViewById(R.id.progressBar);
 //        mGridView = (GridView) findViewById(R.id.movie_grid);
 
         mGridView = findViewById(R.id.movie_grid);
@@ -65,26 +66,49 @@ public class MainActivity extends AppCompatActivity{
 //        new MovieDbQueryTask(this).execute(movieDbUrl);
 
         MOVIE_URL = NetworkUtils.buildUrl(POPULAR);
+
         //new MovieDbQueryTask(this).execute(movieDbUrl);
         String searchParam = POPULAR;
-        MainJsonViewModel jsonViewModel = ViewModelProviders.of(this,
+        jsonViewModel = ViewModelProviders.of(this,
                 new JsonViewModelFactory(this.getApplication(), searchParam)).get(MainJsonViewModel.class);
-        jsonViewModel.getData().observe(this, new Observer<List<MovieDetails>>() {
-            @Override
-            public void onChanged(@Nullable final List<MovieDetails> movieDetails) {
-                iAdapter.setMovieDetails(movieDetails);
-                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mSpinner.setVisibility(View.INVISIBLE);
+        fetchDataFor(POPULAR);
 
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // Traversing to detailed activity
-                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                        intent.putExtra("movieDetail", movieDetails.get(position));
-                        MainActivity.this.startActivity(intent);
-                    }
-                });
-            }
-        });
+////        jsonViewModel.getData().observe(this, new Observer<List<MovieDetails>>() {
+////            @Override
+////            public void onChanged(@Nullable final List<MovieDetails> movieDetails) {
+////               // mGridView.invalidateViews();
+////                mSpinner.setVisibility(View.INVISIBLE);
+////                iAdapter.setMovieDetails(movieDetails);
+////                iAdapter.notifyDataSetChanged();
+////                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+////
+////                    @Override
+////                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////                        // Traversing to detailed activity
+////                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+////                        intent.putExtra("movieDetail", movieDetails.get(position));
+////                        MainActivity.this.startActivity(intent);
+////                    }
+////                });
+////            }
+////        });
+//        final List<MovieDetails> movieDetails = jsonViewModel.getData(searchParam);
+//        iAdapter.setMovieDetails(movieDetails);
+//        //iAdapter.setMovieDetails(movieDetails);
+////                iAdapter = new ImageAdapter(MainActivity.this, movieDetails);
+////                mGridView.setAdapter(iAdapter);
+//        iAdapter.notifyDataSetChanged();
+//        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                // Traversing to detailed activity
+//                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+//                intent.putExtra("movieDetail", movieDetails.get(position));
+//                MainActivity.this.startActivity(intent);
+//            }
+//        });
 
     }
 
@@ -116,11 +140,14 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void displayFavouriteMovies() {
+
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         viewModel.getDetails().observe(this, new Observer<List<MovieDetails>>() {
             @Override
             public void onChanged(@Nullable final List<MovieDetails> movieDetails) {
-               iAdapter.setMovieDetails(movieDetails);
+                iAdapter.setMovieDetails(movieDetails);
+                mGridView.setAdapter(iAdapter);
+                iAdapter.notifyDataSetChanged();
                 mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -139,24 +166,46 @@ public class MainActivity extends AppCompatActivity{
         // Display top rated or popular content based on selection
 //        URL movieDbUrl = NetworkUtils.buildUrl(searchParam);
 //        new MovieDbQueryTask(this).execute(movieDbUrl);
-        MainJsonViewModel jsonViewModel = ViewModelProviders.of(this,
-                                    new JsonViewModelFactory(this.getApplication(), searchParam)).get(MainJsonViewModel.class);
-        jsonViewModel.getData().observe(this, new Observer<List<MovieDetails>>() {
-            @Override
-            public void onChanged(@Nullable final List<MovieDetails> movieDetails) {
-                iAdapter.setMovieDetails(movieDetails);
-                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        Log.d("SEARCHPARAM", searchParam);
+//        MainJsonViewModel jsonViewModel = ViewModelProviders.of(this,
+//                new JsonViewModelFactory(this.getApplication(), searchParam)).get(MainJsonViewModel.class);
+//        jsonViewModel.getData().observe(this, new Observer<List<MovieDetails>>() {
+//            @Override
+//            public void onChanged(@Nullable final List<MovieDetails> movieDetails) {
+//                //iAdapter.setMovieDetails(movieDetails);
+//                iAdapter = new ImageAdapter(MainActivity.this, movieDetails);
+//                mGridView.setAdapter(iAdapter);
+//                iAdapter.notifyDataSetChanged();
+//                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                        // Traversing to detailed activity
+//                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+//                        intent.putExtra("movieDetail", movieDetails.get(position));
+//                        MainActivity.this.startActivity(intent);
+//                    }
+//                });
+//            }
+//        });
+        final List<MovieDetails> movieDetails = jsonViewModel.getData(searchParam);
+        iAdapter.setMovieDetails(movieDetails);
+        //iAdapter.setMovieDetails(movieDetails);
+//                iAdapter = new ImageAdapter(MainActivity.this, movieDetails);
+//                mGridView.setAdapter(iAdapter);
+        iAdapter.notifyDataSetChanged();
+        Log.d("ALL Done", "Done");
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // Traversing to detailed activity
-                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                        intent.putExtra("movieDetail", movieDetails.get(position));
-                        MainActivity.this.startActivity(intent);
-                    }
-                });
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Traversing to detailed activity
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra("movieDetail", movieDetails.get(position));
+                MainActivity.this.startActivity(intent);
             }
         });
+
     }
 
 //    @NonNull

@@ -69,6 +69,7 @@ public class DetailActivity extends AppCompatActivity  {
     ReviewAdapter reviewAdapter;
     private FavMovDatabase favDb;
     private boolean favBtnPressed = false;
+    private boolean movPresentInDb = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -121,13 +122,24 @@ public class DetailActivity extends AppCompatActivity  {
             mUserRating.setText(String.valueOf(md.getUserRating()) + getString(R.string.out_of_ten));
             mReleaseDate.setText(md.getReleasedDate());
             //movieId = md.getMovieId();
-            mFavBtn.setText("Mark as Fav");
+            checkMoviePresent(md.getMovieId());
+//            if(checkMoviePresent(md.getMovieId()) == true) {
+//                Log.d("I AM MARKED", "MARKED");
+//                mFavBtn.setText("Marked Fav");
+//                mFavBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+//                favBtnPressed = true;
+//            } else {
+//                Log.d("I AM NOT MARKED", "NOT MARKED");
+//                mFavBtn.setText("Mark as Fav");
+//                mFavBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+//            }
+
             mFavBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(favBtnPressed == false) {
                       //  movieRepository.performTask(md.getTitle(), md.getMovieId(), "insert");
-                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                        AppExecutors.getInstance().diskIO().execute( new Runnable() {
                             @Override
                             public void run() {
                                // FavouriteMovie fm = new FavouriteMovie(md.getTitle(), md.getMovieId());
@@ -215,6 +227,27 @@ public class DetailActivity extends AppCompatActivity  {
         //movieRepository.getFavMovies().observe();
     }
 
+    public boolean checkMoviePresent(final String movieId){
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                MovieDetails md = favDb.doaAccess().findById(movieId);
+                Log.d("MOVIEID", "GOT MF");
+                if(md != null){
+                    Log.d("INSIDE MD", "MD");
+                    mFavBtn.setText("Marked Fav");
+                    mFavBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    favBtnPressed = true;
+                } else {
+                    mFavBtn.setText("Mark as Fav");
+                    mFavBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                };
+            }
+        });
+        Log.d("CHECKMD", String.valueOf(movPresentInDb));
+        return movPresentInDb;
+    }
 
     private void showMovies() {
 //        List<FavouriteMovie> movies = movieRepository.getFavMovies();
