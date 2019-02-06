@@ -1,14 +1,31 @@
 package com.example.a60010743.movieshow.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
+@Entity
 public class MovieDetails implements Parcelable {
     private String title;
     private String posterTv;
     private String overview;
     private float userRating;
     private String releasedDate;
+
+    public MovieDetails(String title, String posterTv, String overview, float userRating, String releasedDate, @NonNull String movieId) {
+        this.title = title;
+        this.posterTv = posterTv;
+        this.overview = overview;
+        this.userRating = userRating;
+        this.releasedDate = releasedDate;
+        this.movieId = movieId;
+    }
+
+    @PrimaryKey @NonNull
     private String movieId;
 
     public String getTitle() {
@@ -51,19 +68,13 @@ public class MovieDetails implements Parcelable {
         this.releasedDate = releasedDate;
     }
 
+
     public String getMovieId(){ return movieId; }
 
     public void setMovieId(String movieId) { this.movieId = movieId; }
 
 
-    public MovieDetails(String title, String posterTv, String overview, float userRating, String released_date, String movieId) {
-        this.title = title;
-        this.posterTv = posterTv;
-        this.overview = overview;
-        this.userRating = userRating;
-        this.releasedDate = released_date;
-        this.movieId = movieId;
-    }
+
 
     private MovieDetails(Parcel parcel){
         title = parcel.readString();

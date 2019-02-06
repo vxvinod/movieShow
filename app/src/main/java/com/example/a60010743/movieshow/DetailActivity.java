@@ -1,5 +1,6 @@
 package com.example.a60010743.movieshow;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,11 +12,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.a60010743.movieshow.model.FavouriteMovie;
 import com.example.a60010743.movieshow.model.MovieDetails;
+import com.example.a60010743.movieshow.model.MovieRepository;
 import com.example.a60010743.movieshow.model.ReviewContent;
 import com.example.a60010743.movieshow.model.ReviewDetails;
 import com.example.a60010743.movieshow.utilities.JsonUtils;
@@ -41,7 +45,8 @@ public class DetailActivity extends AppCompatActivity  {
 //    private TextView mReleaseDate;
 //    private TextView mUserRating;
 //    private TextView mSynopsis;
-    private String movieId;
+
+    private  MovieDetails md = null;
     private static Context context;
     private static List<String> youTubeKey;
     @BindView(R.id.movie_title) TextView mTitle;
@@ -49,6 +54,7 @@ public class DetailActivity extends AppCompatActivity  {
     @BindView(R.id.release_date_value) TextView mReleaseDate;
     @BindView(R.id.rating_value) TextView mUserRating;
     @BindView(R.id.synopsis) TextView mSynopsis;
+    @BindView(R.id.favourite) Button mFavBtn;
 //    @BindView(R.id.review_author) TextView mAuthor;
 //    @BindView(R.id.review_content) TextView mContent;
     final static String MOVIE_DB_URL = "https://api.themoviedb.org";
@@ -61,13 +67,16 @@ public class DetailActivity extends AppCompatActivity  {
     String[] Items = {"item 0","item 1","item 2", "item 3", "item 4", "item 5", "item 6", "item 7"};
     List<ReviewContent> reviewDetails;
     ReviewAdapter reviewAdapter;
+    private FavMovDatabase favDb;
+    private boolean favBtnPressed = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         DetailActivity.context = getApplicationContext();
-
-
+        //movieRepository = new MovieRepository(context);
+        favDb = FavMovDatabase.getInstance(context);
 
 
 
@@ -102,7 +111,7 @@ public class DetailActivity extends AppCompatActivity  {
 //        mTrailerIcon3.setOnClickListener(this);
         // Get the data from main activity
         Intent intent = getIntent();
-        MovieDetails md = intent.getParcelableExtra("movieDetail");
+        final MovieDetails md = intent.getParcelableExtra("movieDetail");
         if(md != null) {
             mTitle.setText(md.getTitle());
             Picasso.with(DetailActivity.this)
@@ -111,8 +120,43 @@ public class DetailActivity extends AppCompatActivity  {
             mSynopsis.setText(md.getOverview());
             mUserRating.setText(String.valueOf(md.getUserRating()) + getString(R.string.out_of_ten));
             mReleaseDate.setText(md.getReleasedDate());
-            movieId = md.getMovieId();
-            URL movieVideoUrl = NetworkUtils.buildTrailerUrl(movieId);
+            //movieId = md.getMovieId();
+            mFavBtn.setText("Mark as Fav");
+            mFavBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(favBtnPressed == false) {
+                      //  movieRepository.performTask(md.getTitle(), md.getMovieId(), "insert");
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                               // FavouriteMovie fm = new FavouriteMovie(md.getTitle(), md.getMovieId());
+                                favDb.doaAccess().insertTask(md);
+                            }
+                        });
+                        mFavBtn.setText("Marked Fav");
+                        mFavBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        favBtnPressed = true;
+                    } else {
+                       // movieRepository.performTask(md.getTitle(), md.getMovieId(), "delete");
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                               // FavouriteMovie fm = new FavouriteMovie(md.getTitle(), md.getMovieId());
+                                favDb.doaAccess().deleteTask(md);
+                            }
+                        });
+                        mFavBtn.setText("Mark as Fav");
+                        mFavBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    }
+                    Log.d("Inside Insert DB", "DB1");
+
+                }
+            });
+
+
+            showMovies();
+            URL movieVideoUrl = NetworkUtils.buildTrailerUrl(md.getMovieId());
             new fetchMovieDetails().execute(movieVideoUrl);
 
 //            trailerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -130,7 +174,7 @@ public class DetailActivity extends AppCompatActivity  {
 
             MovieDbApi movieDbApi = retrofit.create(MovieDbApi.class);
 
-            Call<ReviewDetails> call = movieDbApi.getReview(movieId, API_KEY);
+            Call<ReviewDetails> call = movieDbApi.getReview(md.getMovieId(), API_KEY);
 
             call.enqueue(new Callback<ReviewDetails>() {
                 @Override
@@ -168,6 +212,16 @@ public class DetailActivity extends AppCompatActivity  {
             });
         }
 
+        //movieRepository.getFavMovies().observe();
+    }
+
+
+    private void showMovies() {
+//        List<FavouriteMovie> movies = movieRepository.getFavMovies();
+//        for(FavouriteMovie mov:movies){
+//            Log.d("DATA---ID", mov.getMovieId());
+//            Log.d("DATA===TITLE|", mov.getMovieTitle());
+//        }
     }
 
     public void start_video_activity(String key){

@@ -1,6 +1,7 @@
 package com.example.a60010743.movieshow;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +38,17 @@ public class ImageAdapter extends BaseAdapter {
         return movieDetails.size();
     }
 
+    public void setMovieDetails(List<MovieDetails> md){
+        movieDetails = md;
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = inflater.inflate(R.layout.activity_gridview, null);
         ImageView im = (ImageView) convertView.findViewById(R.id.movie_icon);
         String image = movieDetails.get(position).getPosterTv();
+        Log.d("Image Details--", image);
         Picasso.with(mContext)
                 .load("http://image.tmdb.org/t/p/w500/"+image)
                 .into(im);
