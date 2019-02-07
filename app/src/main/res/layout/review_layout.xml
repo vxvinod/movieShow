@@ -9,15 +9,15 @@
         android:id="@+id/rv_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Author"
-
-    />
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:padding="8dp"
+        tools:text="Author" />
 
     <TextView
         android:id="@+id/rv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-
+        android:padding="2dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="TextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextView" />
 </LinearLayout>
