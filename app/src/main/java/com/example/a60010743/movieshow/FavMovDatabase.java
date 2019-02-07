@@ -5,8 +5,6 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.util.Log;
-
-import com.example.a60010743.movieshow.model.FavouriteMovie;
 import com.example.a60010743.movieshow.model.MovieDetails;
 
 @Database(entities = {MovieDetails.class}, version = 1, exportSchema = false)
@@ -20,13 +18,11 @@ public abstract class FavMovDatabase extends RoomDatabase {
     public static FavMovDatabase getInstance(Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
-                Log.d("LOG_TAG", "Creating DB");
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                                             FavMovDatabase.class, FavMovDatabase.DATABASE_NAME)
                                             .build();
             }
         }
-        Log.d(LOG_TAG, "Database Instance");
         return sInstance;
     }
 

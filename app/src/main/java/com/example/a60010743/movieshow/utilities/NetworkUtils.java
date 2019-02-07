@@ -101,11 +101,4 @@ public final class NetworkUtils {
         return url;
     }
 
-
-
-    // getResponseWithUrl
-
-
-
-
 }

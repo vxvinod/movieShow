@@ -1,4 +1,4 @@
-package com.example.a60010743.movieshow;
+package com.example.a60010743.movieshow.Adapter;
 
 import android.arch.lifecycle.Observer;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.example.a60010743.movieshow.R;
 import com.example.a60010743.movieshow.model.MovieDetails;
 import com.squareup.picasso.Picasso;
 
@@ -38,7 +39,7 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-
+        //return movieDetails.size();
         return (movieDetails ==null) ? 0: movieDetails.size();
     }
 

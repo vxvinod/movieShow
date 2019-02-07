@@ -1,4 +1,4 @@
-package com.example.a60010743.movieshow;
+package com.example.a60010743.movieshow.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.a60010743.movieshow.R;
 import com.example.a60010743.movieshow.model.ReviewContent;
 import com.example.a60010743.movieshow.model.ReviewDetails;
 
@@ -29,17 +30,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void setReviewsList(List<ReviewContent> reviewsContent){
         reviews.clear();
         reviews.addAll(reviewsContent);
-
-        for(ReviewContent review: reviewsContent){
-
-            String content = "";
-            content += "Inside Adapter Author:" + review.getAuthor() + "\n";
-            content += "Inside Adapter Content:" + review.getContent() + "\n";
-            Log.d("Inside Adapter  CONTENT", content);
-            //mContent.setText(content);
-
-
-        }
         notifyDataSetChanged();
     }
 

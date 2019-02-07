@@ -1,4 +1,4 @@
-package com.example.a60010743.movieshow;
+package com.example.a60010743.movieshow.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.a60010743.movieshow.R;
 
 import java.util.List;
 
@@ -36,7 +38,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View v) {
                 String videoPath = "https://www.youtube.com/watch?v="+trailerKeys.get(position);
-                Log.d("TRAILER KEY", videoPath);
                 Uri uri = Uri.parse(videoPath);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 context.startActivity(intent);
