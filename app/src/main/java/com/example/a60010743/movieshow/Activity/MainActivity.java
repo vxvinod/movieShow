@@ -106,19 +106,24 @@ public class MainActivity extends AppCompatActivity{
 
     // Fetch data for TOP_RATED and POPULAR movies.
     private void fetchDataFor(String searchParam) {
-        final List<MovieDetails> movieDetails = jsonViewModel.getData(searchParam);
-        iAdapter.setMovieDetails(movieDetails);
-        iAdapter.notifyDataSetChanged();
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        jsonViewModel.getData(searchParam).observe(this, new Observer<List<MovieDetails>>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onChanged(@Nullable final List<MovieDetails> movieDetails) {
+                iAdapter.setMovieDetails(movieDetails);
+                iAdapter.notifyDataSetChanged();
+                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                // Traversing to detailed activity
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra("movieDetail", movieDetails.get(position));
-                MainActivity.this.startActivity(intent);
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        // Traversing to detailed activity
+                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                        intent.putExtra("movieDetail", movieDetails.get(position));
+                        MainActivity.this.startActivity(intent);
+                    }
+                });
             }
         });
+
     }
 }

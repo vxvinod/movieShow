@@ -18,23 +18,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.a60010743.movieshow.utilities.JsonUtils.parse_json_get_details;
+
 public class MainJsonViewModel extends AndroidViewModel {
 
-    private List<MovieDetails> movDetails;
+    private MutableLiveData<List<MovieDetails>> movDetails = new MutableLiveData<List<MovieDetails>>();
     private ProgressBar mSpinner;
     public MainJsonViewModel(@NonNull Application application, String searchParam, ProgressBar spinner) {
         super(application);
-        Log.d("MainJsonViewModel", "indie view model");
         this.mSpinner = spinner;
-        loadData(searchParam);
     }
 
-
+    // Load popular/top_rated data
     private void loadData(final String searchParam) {
 
         new AsyncTask<Void, Void, List<MovieDetails>>(){
             String movieData;
-
             @Override
             protected void onPreExecute() {
                 mSpinner.setVisibility(View.VISIBLE);
@@ -66,7 +65,7 @@ public class MainJsonViewModel extends AndroidViewModel {
                 Log.d("INSIDE", "POST EXECUTE");
                 mSpinner.setVisibility(View.INVISIBLE);
                 try {
-                    movDetails = JsonUtils.parse_json_get_details(movieData);
+                    movDetails.setValue(JsonUtils.parse_json_get_details(movieData));
 
                 } catch (Exception e) {
 
@@ -75,8 +74,7 @@ public class MainJsonViewModel extends AndroidViewModel {
         }.execute();
     }
 
-    public List<MovieDetails> getData(String searchParam){
-       // if(movDetails == null){  loadData(searchParam);}
+    public LiveData<List<MovieDetails>> getData(String searchParam){
         loadData(searchParam);
         return movDetails;
     }
